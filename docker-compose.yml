@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  multi-tool-agent:
+    build: .
+    container_name: multi-tool-agent
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - PYTHONPATH=/app
+      - PORT=5000
+    env_file:
+      - backend/.env
+    restart: unless-stopped
+    volumes:
+      - ./backend/.env:/app/backend/.env:ro
+    networks:
+      - multi-tool-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+networks:
+  multi-tool-network:
+    driver: bridge
+# For development with hot reload
+# Uncomment the section below and use: docker-compose -f docker-compose.yml -f docker-compose.dev.yml up
+#
+# services:
+#   multi-tool-agent-dev:
+#     build: .
+#     container_name: multi-tool-agent-dev
+#     ports:
+#       - "5000:5000"
+#     environment:
+#       - FLASK_ENV=development
+#       - PYTHONPATH=/app
+#     volumes:
+#       - ./backend:/app/backend
+#       - ./frontend/build:/app/frontend/build
+#       - ./backend/.env:/app/backend/.env:ro
+#     command: ["python", "backend/app.py"]

@@ -1,0 +1,26 @@
+version: "3.8"
+
+services:
+  multi-tool-agent-dev:
+    build: .
+    container_name: multi-tool-agent-dev
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=development
+      - FLASK_DEBUG=1
+      - PYTHONPATH=/app
+    env_file:
+      - backend/.env
+    volumes:
+      - ./backend:/app/backend:ro
+      - ./frontend/build:/app/frontend/build:ro
+      - ./backend/.env:/app/backend/.env:ro
+    networks:
+      - multi-tool-network
+    command: ["python", "backend/app.py"]
+    restart: unless-stopped
+
+networks:
+  multi-tool-network:
+    driver: bridge

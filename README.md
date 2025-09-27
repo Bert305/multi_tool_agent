@@ -38,7 +38,102 @@ multi_tool_agent/
   - [ExchangeRate-API](https://exchangerate-api.com/) - Currency rates
   - OpenAI & Anthropic (optional, for future AI features)
 
-## 📦 Installation
+## � Docker Deployment (Recommended)
+
+The easiest way to run the Multi-Tool Agent is using Docker, which bundles both frontend and backend into a single container.
+
+### Prerequisites
+- **Docker** and **Docker Compose** installed
+- API keys configured in `backend/.env`
+
+### Quick Start with Docker
+
+#### Using Docker Compose (Recommended)
+```bash
+# Build and start the application
+docker-compose up --build
+
+# Or run in detached mode
+docker-compose up -d --build
+```
+
+#### Using Convenience Scripts
+
+**Windows:**
+```cmd
+# Build the image
+docker-run.bat build
+
+# Start in production mode
+docker-run.bat start
+
+# View logs
+docker-run.bat logs
+
+# Stop the application
+docker-run.bat stop
+```
+
+**Linux/macOS:**
+```bash
+# Make script executable
+chmod +x docker-run.sh
+
+# Build the image
+./docker-run.sh build
+
+# Start in production mode
+./docker-run.sh start
+
+# View logs
+./docker-run.sh logs
+
+# Stop the application
+./docker-run.sh stop
+```
+
+#### Manual Docker Commands
+```bash
+# Build the image
+docker build -t multi-tool-agent .
+
+# Run the container
+docker run -d \
+  --name multi-tool-agent \
+  -p 5000:5000 \
+  --env-file backend/.env \
+  multi-tool-agent
+```
+
+### Docker Features
+
+✅ **Multi-stage build**: Optimized image size  
+✅ **Production ready**: Uses Gunicorn WSGI server  
+✅ **Health checks**: Built-in container health monitoring  
+✅ **Security**: Runs as non-root user  
+✅ **Single port**: Frontend and backend served on port 5000  
+✅ **Environment isolation**: All dependencies containerized  
+
+### Docker Commands Reference
+
+| Command | Description |
+|---------|-------------|
+| `docker-run.bat build` | Build the Docker image |
+| `docker-run.bat start` | Start in production mode |
+| `docker-run.bat dev` | Start in development mode |
+| `docker-run.bat stop` | Stop the application |
+| `docker-run.bat restart` | Restart the application |
+| `docker-run.bat logs` | View application logs |
+| `docker-run.bat status` | Show container status |
+| `docker-run.bat clean` | Remove containers and images |
+
+### Access Your Application
+Once running, your application will be available at:
+- **🌐 Web Interface**: `http://localhost:5000`
+- **🔧 API Endpoint**: `http://localhost:5000/agent`
+- **❤️ Health Check**: `http://localhost:5000/health`
+
+## �📦 Manual Installation (Alternative)
 
 ### 1. Clone the Repository
 ```bash
@@ -238,7 +333,29 @@ if "keyword" in query:
 
 ## 🐛 Troubleshooting
 
-### Common Issues
+### Docker Issues
+
+1. **"docker-compose: command not found"**
+   - Install Docker Desktop which includes Docker Compose
+   - Or install Docker Compose separately
+
+2. **"Port 5000 already in use"**
+   - Change port mapping: `docker-compose up -p 8000:5000`
+   - Or stop other services using port 5000
+
+3. **"Build failed" or dependency errors**
+   - Clear Docker cache: `docker system prune -a`
+   - Rebuild: `docker-compose build --no-cache`
+
+4. **Container exits immediately**
+   - Check logs: `docker-compose logs`
+   - Verify `.env` file exists in `backend/` directory
+
+5. **Health check failing**
+   - Container may still be starting (wait 30-60 seconds)
+   - Check logs for application errors
+
+### Manual Installation Issues
 
 1. **"ModuleNotFoundError: No module named 'flask'"**
    - Ensure virtual environment is activated
