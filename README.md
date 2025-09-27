@@ -1,6 +1,19 @@
 # 🛠️ Multi-Tool Agent
 
-A full-stack intelligent agent that provides weather information, current time, news headlines, and currency exchange rates through a user-friendly web interface.
+A full-stack i## 🐳 Docker Deployment (Recommended)
+
+The Multi-Tool Agent uses an **optimized Docker setup** that runs both frontend and backend together in a single container for maximum performance and efficiency.
+
+### 🚀 **Why Docker is Recommended:**
+- **⚡ Faster Runtime**: Single container serves both React frontend and Flask API
+- **🏗️ Multi-Stage Build**: Optimized build process with separate frontend and backend stages
+- **📦 Production Ready**: Uses Gunicorn WSGI server with health checks and security hardening
+- **🔧 Zero Configuration**: Everything bundled together - no need to run frontend and backend separately
+- **🛡️ Containerized**: All dependencies isolated, consistent across environments
+
+### Prerequisites
+- **Docker** and **Docker Compose** installed
+- API keys configured in `backend/.env`ent agent that provides weather information, current time, news headlines, and currency exchange rates through a user-friendly web interface.
 
 ## 🚀 Features
 
@@ -107,12 +120,14 @@ docker run -d \
 
 ### Docker Features
 
-✅ **Multi-stage build**: Optimized image size  
-✅ **Production ready**: Uses Gunicorn WSGI server  
-✅ **Health checks**: Built-in container health monitoring  
-✅ **Security**: Runs as non-root user  
-✅ **Single port**: Frontend and backend served on port 5000  
-✅ **Environment isolation**: All dependencies containerized  
+✅ **Optimized Multi-Stage Build**: Separate Node.js and Python build stages for efficient image size  
+✅ **Unified Frontend + Backend**: React app and Flask API served together on single port 5000  
+✅ **Production Ready**: Uses Gunicorn WSGI server with optimal worker configuration  
+✅ **Health Checks**: Built-in container health monitoring for reliability  
+✅ **Security Hardened**: Runs as non-root user with minimal attack surface  
+✅ **Hot Deployment**: Single container handles both web interface and API calls  
+✅ **Environment Isolation**: All dependencies containerized for consistent deployments  
+✅ **Static Asset Optimization**: Proper serving of React build files (CSS, JS, images)  
 
 ### Docker Commands Reference
 
@@ -127,11 +142,66 @@ docker run -d \
 | `docker-run.bat status` | Show container status |
 | `docker-run.bat clean` | Remove containers and images |
 
-### Access Your Application
-Once running, your application will be available at:
-- **🌐 Web Interface**: `http://localhost:5000`
-- **🔧 API Endpoint**: `http://localhost:5000/agent`
-- **❤️ Health Check**: `http://localhost:5000/health`
+### 🏗️ **Dockerfile Architecture**
+
+The Multi-Tool Agent uses an advanced **multi-stage Docker build** that optimizes both development and production deployment:
+
+```dockerfile
+# Stage 1: Frontend Build (Node.js)
+FROM node:18-alpine AS frontend-build
+- Builds React app with npm ci --only=production
+- Creates optimized production bundle
+- Generates static files (CSS, JS, HTML)
+
+# Stage 2: Backend + Unified Serving (Python)
+FROM python:3.11-slim AS backend
+- Installs Python dependencies with pip
+- Copies Flask backend application
+- Copies built React files from Stage 1
+- Configures Gunicorn for production serving
+- Serves both React frontend and Flask API on port 5000
+```
+
+**Key Benefits:**
+- **🔥 Single Container**: No need for separate frontend/backend containers
+- **⚡ Faster Startup**: Everything loads together in one process
+- **📦 Smaller Image**: Multi-stage build eliminates Node.js from final image
+- **🛡️ Security**: Runs as non-root user with minimal dependencies
+
+### 🎯 Access Your Application
+Once running, your **complete full-stack application** will be available at:
+- **🌐 Web Interface**: `http://localhost:5000` *(React frontend with smart query processing)*
+- **🔧 API Endpoint**: `http://localhost:5000/agent` *(Flask backend for programmatic access)*
+- **❤️ Health Check**: `http://localhost:5000/health` *(Container status monitoring)*
+
+> **💡 Pro Tip**: The Docker container serves both your React frontend and Flask API simultaneously on port 5000, eliminating the need to run separate development servers!
+
+### 📋 **Container Management Commands**
+
+Essential commands for managing your Docker container:
+
+| Command | Description |
+|---------|-------------|
+| `docker-compose down` | **Stop** the container and remove it |
+| `docker-compose up -d` | **Start** the container in detached mode (background) |
+| `docker-compose build --no-cache` | **Rebuild** the container from scratch (recommended after code changes) |
+| `docker-compose logs -f` | **View logs** in real-time (follow mode) |
+
+**Quick Usage Examples:**
+```bash
+# Stop the application (will deactivate the application running on docker)
+docker-compose down
+
+# Start the application in background (will activate the frontend and backend using docker)
+docker-compose up -d
+
+# Rebuild after making code changes
+docker-compose build --no-cache
+docker-compose up -d
+
+# Monitor application logs
+docker-compose logs -f
+```
 
 ## �📦 Manual Installation (Alternative)
 
